@@ -1,7 +1,42 @@
-/assets/*
-  Cache-Control: public, max-age=600, must-revalidate
-
 /*
+  Link: <https://coverfit.app/.well-known/ai-catalog>; rel="ai-catalog", <https://coverfit.app/auth.md>; rel="service-doc", <https://coverfit.app/llms.txt>; rel="llms-txt", <https://coverfit.app/sitemap.xml>; rel="sitemap"
+  Vary: Accept
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: SAMEORIGIN
+
+/assets/*
+  Cache-Control: public, max-age=600, must-revalidate
+
+/404.html
+  X-Robots-Tag: noindex
+
+/index.md
+  Content-Type: text/markdown; charset=utf-8
+/about.md
+  Content-Type: text/markdown; charset=utf-8
+/contact.md
+  Content-Type: text/markdown; charset=utf-8
+/privacy.md
+  Content-Type: text/markdown; charset=utf-8
+/kdp-cover-template.md
+  Content-Type: text/markdown; charset=utf-8
+/spine-width-calculator.md
+  Content-Type: text/markdown; charset=utf-8
+/printing-cost-calculator.md
+  Content-Type: text/markdown; charset=utf-8
+/book-cover-design.md
+  Content-Type: text/markdown; charset=utf-8
+/trim-sizes.md
+  Content-Type: text/markdown; charset=utf-8
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+
+/auth.md
+  Content-Type: text/markdown; charset=utf-8
+
+/.well-known/*
+  Content-Type: application/json; charset=utf-8

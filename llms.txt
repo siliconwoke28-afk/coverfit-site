@@ -1,0 +1,25 @@
+# CoverFit
+
+> Browser-only cover studio for self-publishers. Computes the KDP full wrap from trim size, page count, and paper stock, then exports a 300 DPI PNG and a print-ready PDF. No upload, no account.
+
+## Cover tools
+
+- [KDP book cover maker](https://coverfit.app/): Build a full-wrap paperback cover with correct spine, bleed, and 300 DPI export. Rendering and export happen in the browser.
+- [KDP cover template: dimensions and spine math](https://coverfit.app/kdp-cover-template): The wrap formula, the four guide zones, and full-wrap dimensions from 120 to 500 pages.
+- [Spine width calculator](https://coverfit.app/spine-width-calculator): Spine width in inches, millimeters, and pixels at 300 DPI, plus the full-wrap size that follows.
+- [KDP printing cost calculator](https://coverfit.app/printing-cost-calculator): Fixed plus per-page printing cost, and the 60% royalty that follows from your list price.
+- [Book cover design guide](https://coverfit.app/book-cover-design): Thumbnail hierarchy, genre type and color signals, spine and back-cover rules.
+- [Book trim sizes](https://coverfit.app/trim-sizes): Common trim sizes in inches and millimeters, and what each one signals to a reader.
+
+## Site
+
+- [About CoverFit](https://coverfit.app/about): What the tool does, what it deliberately does not do, and the editorial standard behind the numbers.
+- [Contact CoverFit](https://coverfit.app/contact): Report a wrong dimension or an export problem by email.
+- [Privacy policy](https://coverfit.app/privacy): What stays in your browser, what the host may log, and third parties.
+
+## Machine-readable
+
+- Markdown twins: append `.md` to any page path, for example https://coverfit.app/index.md
+- Full text: https://coverfit.app/llms-full.txt
+- AI catalog: https://coverfit.app/.well-known/ai-catalog
+- Sitemap: https://coverfit.app/sitemap.xml

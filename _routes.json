@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "include": [
+    "/*"
+  ],
+  "exclude": [
+    "/assets/*",
+    "/index.md",
+    "/about.md",
+    "/contact.md",
+    "/privacy.md",
+    "/kdp-cover-template.md",
+    "/spine-width-calculator.md",
+    "/printing-cost-calculator.md",
+    "/book-cover-design.md",
+    "/trim-sizes.md",
+    "/llms.txt",
+    "/llms-full.txt",
+    "/sitemap.xml",
+    "/robots.txt",
+    "/404.html",
+    "/auth.md",
+    "/.well-known/*"
+  ]
+}

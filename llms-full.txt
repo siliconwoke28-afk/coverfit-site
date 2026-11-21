@@ -1,0 +1,124 @@
+# CoverFit — full text for AI agents
+
+CoverFit is a static, browser-only cover studio for self-publishers. It builds a KDP-compliant paperback wrap: back cover, spine, and front cover on one sheet, with 0.125 in bleed per edge. Inputs are trim size, page count, and paper stock. Outputs are a 300 DPI PNG and a single-page PDF. Nothing is uploaded; there is no account.
+
+Site: https://coverfit.app/
+Sitemap: https://coverfit.app/sitemap.xml
+Contact: fit@coverfit.app
+
+## Core formulas
+
+- Spine width: page count × paper thickness. White = 0.002252 in per page. Cream = 0.0025 in per page.
+- Full wrap width: 2 × trim width + spine width + 0.25 in.
+- Full wrap height: trim height + 0.25 in.
+- Bleed: 0.125 in on each edge. Safe area: 0.25 in inside the trim.
+- Export resolution: 300 DPI.
+
+## Coverage
+
+### KDP book cover maker
+
+URL: https://coverfit.app/
+Markdown: https://coverfit.app/index.md
+
+Worked examples on the page:
+
+| Trim | Pages | Paper | Spine | Full wrap |
+| --- | --- | --- | --- | --- |
+| 6 × 9 in | 320 | Cream | 0.800 in | 13.050 × 9.250 in |
+| 6 × 9 in | 320 | White | 0.721 in | 12.971 × 9.250 in |
+| 5.5 × 8.5 in | 240 | Cream | 0.600 in | 11.850 × 8.750 in |
+| 5 × 8 in | 180 | White | 0.405 in | 10.655 × 8.250 in |
+| 8.5 × 11 in | 120 | White | 0.270 in | 17.520 × 11.250 in |
+
+The page also answers: what size a KDP cover should be, how spine width is calculated, whether files are uploaded, and whether the exported PDF can be used for KDP.
+
+### KDP cover template
+
+URL: https://coverfit.app/kdp-cover-template
+Markdown: https://coverfit.app/kdp-cover-template.md
+
+Guide zones: bleed (0.125 in outside trim, background art), trim (final cut line, nothing critical), safe area (0.25 in inside trim, all type), barcode zone (lower-right of back cover, roughly 2 × 1.2 in, keep quiet).
+
+Full-wrap dimensions at 6 × 9 in by page count:
+
+| Pages | Spine cream | Wrap cream | Spine white | Wrap white |
+| --- | --- | --- | --- | --- |
+| 120 | 0.300 | 12.550 × 9.250 | 0.270 | 12.520 × 9.250 |
+| 200 | 0.500 | 12.750 × 9.250 | 0.450 | 12.700 × 9.250 |
+| 280 | 0.700 | 12.950 × 9.250 | 0.631 | 12.881 × 9.250 |
+| 320 | 0.800 | 13.050 × 9.250 | 0.721 | 12.971 × 9.250 |
+| 400 | 1.000 | 13.250 × 9.250 | 0.901 | 13.151 × 9.250 |
+| 500 | 1.250 | 13.500 × 9.250 | 1.126 | 13.376 × 9.250 |
+
+Rejection causes listed on the page: a template from a different page count, type inside the bleed, 72 DPI design, and a busy back cover under the barcode.
+
+### Spine width calculator
+
+URL: https://coverfit.app/spine-width-calculator
+Markdown: https://coverfit.app/spine-width-calculator.md
+
+Spine width by page count:
+
+| Pages | White | Cream | Cream mm |
+| --- | --- | --- | --- |
+| 100 | 0.225 | 0.250 | 6.35 |
+| 150 | 0.338 | 0.375 | 9.53 |
+| 200 | 0.450 | 0.500 | 12.70 |
+| 250 | 0.563 | 0.625 | 15.88 |
+| 300 | 0.676 | 0.750 | 19.05 |
+| 350 | 0.788 | 0.875 | 22.23 |
+| 400 | 0.901 | 1.000 | 25.40 |
+| 500 | 1.126 | 1.250 | 31.75 |
+| 700 | 1.576 | 1.750 | 44.45 |
+
+Below about 0.25 in there is no usable spine text; between 0.25 and 0.5 in, use the title only. The tool hides spine text automatically below 0.18 in.
+
+### KDP printing cost calculator
+
+URL: https://coverfit.app/printing-cost-calculator
+Markdown: https://coverfit.app/printing-cost-calculator.md
+
+Rates used: $0.85 fixed, $0.012 per page black ink, $0.0225 standard color, $0.0575 premium color, 60% paperback royalty minus printing cost. Rates were last reviewed in 2024 and are editable on the page.
+
+| Pages | Black ink | Standard color | Premium color |
+| --- | --- | --- | --- |
+| 100 | $2.05 | $3.10 | $6.60 |
+| 200 | $3.25 | $5.35 | $12.35 |
+| 320 | $4.69 | $8.05 | $19.25 |
+| 400 | $5.65 | $9.85 | $23.85 |
+| 500 | $6.85 | $12.10 | $29.60 |
+
+Excluded: taxes, currency conversion, expanded distribution, hardcover, promotions, and non-standard trim surcharges.
+
+### Book cover design guide
+
+URL: https://coverfit.app/book-cover-design
+Markdown: https://coverfit.app/book-cover-design.md
+
+Thumbnail checklist: title readable at 200 px, author visible but not dominant, contrast 4.5:1, three elements or fewer, genre signalled at a glance. Three-level hierarchy: title 30 to 50 percent of cover height, then author, then at most one supporting element. Two type families are enough; avoid hairline serifs and scripts below 24 points. One dominant color and one accent; test in grayscale. The spine is the only surface visible on a shelf. Leave the lower-right 2 × 1.2 in of the back cover free for the barcode.
+
+### Book trim sizes
+
+URL: https://coverfit.app/trim-sizes
+Markdown: https://coverfit.app/trim-sizes.md
+
+| Trim | Inches | Millimeters | Usual use |
+| --- | --- | --- | --- |
+| 5 × 8 | 5.00 × 8.00 | 127 × 203 | Pocket fiction, novellas |
+| 5.25 × 8 | 5.25 × 8.00 | 133 × 203 | Trade fiction, poetry |
+| 5.5 × 8.5 | 5.50 × 8.50 | 140 × 216 | Fiction, memoir, self-help |
+| 6 × 9 | 6.00 × 9.00 | 152 × 229 | Business, nonfiction, fiction |
+| 7 × 10 | 7.00 × 10.00 | 178 × 254 | Manuals, workbooks, cookbooks |
+| 8 × 10 | 8.00 × 10.00 | 203 × 254 | Children's picture books |
+| 8.5 × 11 | 8.50 × 11.00 | 216 × 279 | Planners, letter-size workbooks |
+
+## About, contact, privacy
+
+- About: https://coverfit.app/about.md — scope, editorial standard, and the explicit non-affiliation with Amazon and KDP.
+- Contact: https://coverfit.app/contact.md — fit@coverfit.app, reply in 1 to 3 business days, details to include in a bug report.
+- Privacy: https://coverfit.app/privacy.md — images stay in the browser; hosting logs are standard request data; Cloudflare is the host.
+
+## Boundaries
+
+CoverFit computes geometry. It cannot confirm that KDP will accept a file, cannot verify fonts or color profiles, and is not affiliated with Amazon or Kindle Direct Publishing. Every export should be checked in KDP's previewer.

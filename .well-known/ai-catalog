@@ -1,0 +1,52 @@
+{
+  "specVersion": "v0.91",
+  "host": {
+    "name": "CoverFit",
+    "url": "https://coverfit.app",
+    "domain": "coverfit.app"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:coverfit.app:content:llms",
+      "displayName": "CoverFit llms.txt site summary",
+      "type": "text/plain",
+      "url": "https://coverfit.app/llms.txt",
+      "representativeQueries": [
+        "CoverFit site summary for AI agents",
+        "KDP book cover maker that runs in the browser",
+        "calculate KDP spine width and full wrap"
+      ]
+    },
+    {
+      "identifier": "urn:air:coverfit.app:content:markdown",
+      "displayName": "CoverFit Markdown twin of the cover maker",
+      "type": "text/markdown",
+      "url": "https://coverfit.app/index.md",
+      "representativeQueries": [
+        "KDP cover page as Markdown",
+        "full wrap dimensions for a 320 page cream paperback"
+      ]
+    },
+    {
+      "identifier": "urn:air:coverfit.app:content:llms-full",
+      "displayName": "CoverFit full text with dimension tables",
+      "type": "text/plain",
+      "url": "https://coverfit.app/llms-full.txt",
+      "representativeQueries": [
+        "spine width table by page count",
+        "KDP printing cost per page 2024",
+        "book trim size chart"
+      ]
+    },
+    {
+      "identifier": "urn:air:coverfit.app:content:sitemap",
+      "displayName": "CoverFit sitemap",
+      "type": "application/xml",
+      "url": "https://coverfit.app/sitemap.xml",
+      "representativeQueries": [
+        "list CoverFit pages",
+        "KDP cover tools and calculators"
+      ]
+    }
+  ]
+}
