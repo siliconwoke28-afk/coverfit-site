@@ -256,6 +256,8 @@
 
     els.image && els.image.addEventListener("change", function () {
       var f = this.files && this.files[0];
+      var nm = document.getElementById("f-image-name");
+      if (nm) nm.textContent = f ? f.name : "No image selected";
       if (!f) { uploaded = null; render(); return; }
       var url = URL.createObjectURL(f);
       var img = new Image();
@@ -303,7 +305,7 @@
       a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
       els.pdfBtn.disabled = false;
-      els.pdfBtn.textContent = "Download print-ready PDF";
+      els.pdfBtn.textContent = "Save print PDF";
     });
 
     els.resetBtn && els.resetBtn.addEventListener("click", function () {
@@ -311,9 +313,9 @@
       els.subtitle.value = "A novel about maps, memory, and the places we refuse to leave.";
       els.author.value = "A. R. Whitfield";
       els.trim.value = "6x9"; els.pages.value = "320"; els.paper.value = "cream";
-      els.bg.value = "#f6f1e6"; els.fg.value = "#1e1a16"; els.accent.value = "#b4472a";
+      els.bg.value = "#f4ecdd"; els.fg.value = "#2b2118"; els.accent.value = "#b4472a";
       els.font.value = "Georgia, serif"; els.spineText.checked = true; els.guides.checked = false;
-      uploaded = null; render();
+      uploaded = null; var nm = document.getElementById("f-image-name"); if (nm) nm.textContent = "No image selected"; render();
     });
 
     render();
@@ -387,7 +389,63 @@
     run();
   }
 
+  function initProofs() {
+    var specs = [
+      { id: "proof-a", bg: "#efe3cf", fg: "#2b2118", accent: "#a9542c", title: "The Quiet Cartographer", author: "A. R. Whitfield", sub: "A novel", serif: true },
+      { id: "proof-b", bg: "#8b9d83", fg: "#f7efdf", accent: "#e0b877", title: "Salt & Orchard", author: "Mara Bell", sub: "Recipes from a small farm", serif: true },
+      { id: "proof-c", bg: "#2b2118", fg: "#f0e4cf", accent: "#c66b3d", title: "Night Ledger", author: "J. Cole", sub: "A thriller", serif: false }
+    ];
+    specs.forEach(function (sp) {
+      var cv = document.getElementById(sp.id);
+      if (!cv) return;
+      var g = cv.getContext("2d");
+      var W = cv.width, H = cv.height;
+      g.fillStyle = sp.bg; g.fillRect(0, 0, W, H);
+
+      if (sp.id === "proof-a") {
+        g.strokeStyle = sp.accent; g.lineWidth = 2;
+        g.strokeRect(W * 0.09, H * 0.08, W * 0.82, H * 0.84);
+        g.beginPath(); g.moveTo(W * 0.09, H * 0.2); g.lineTo(W * 0.91, H * 0.2); g.stroke();
+        g.fillStyle = sp.accent;
+        g.fillRect(W * 0.42, H * 0.13, W * 0.16, 3);
+      } else if (sp.id === "proof-b") {
+        g.globalAlpha = 0.22; g.fillStyle = sp.accent;
+        g.beginPath(); g.arc(W * 0.76, H * 0.24, W * 0.22, 0, Math.PI * 2); g.fill();
+        g.beginPath(); g.arc(W * 0.24, H * 0.78, W * 0.26, 0, Math.PI * 2); g.fill();
+        g.globalAlpha = 1;
+      } else {
+        g.fillStyle = sp.accent; g.fillRect(0, 0, W * 0.055, H);
+        g.globalAlpha = 0.12; g.fillStyle = "#f0e4cf";
+        for (var y = 0; y < H; y += 14) g.fillRect(W * 0.12, y, W * 0.76, 1);
+        g.globalAlpha = 1;
+      }
+
+      var family = sp.serif ? "Georgia, 'Times New Roman', serif" : "'Trebuchet MS', Verdana, sans-serif";
+      var titleSize = sp.id === "proof-b" ? W * 0.135 : W * 0.12;
+      g.fillStyle = sp.fg; g.textAlign = "center"; g.textBaseline = "top";
+      g.font = "700 " + titleSize + "px " + family;
+      var words = sp.title.split(" "), lines = [], line = "";
+      words.forEach(function (w) {
+        var test = line ? line + " " + w : w;
+        if (g.measureText(test).width > W * 0.78 && line) { lines.push(line); line = w; }
+        else line = test;
+      });
+      if (line) lines.push(line);
+      var startY = H * (sp.id === "proof-a" ? 0.34 : 0.4) - (lines.length - 1) * titleSize * 0.55;
+      lines.forEach(function (l, i) { g.fillText(l, W / 2, startY + i * titleSize * 1.08); });
+
+      g.font = "italic " + (W * 0.045) + "px " + family;
+      g.fillStyle = sp.id === "proof-c" ? "rgba(240,228,207,.72)" : "rgba(43,33,24,.68)";
+      g.fillText(sp.sub, W / 2, startY + lines.length * titleSize * 1.12 + 10);
+
+      g.font = "600 " + (W * 0.052) + "px " + family;
+      g.fillStyle = sp.accent;
+      g.fillText(sp.author.toUpperCase(), W / 2, H * 0.86);
+    });
+  }
+
   function boot() {
+    initProofs();
     initGenerator();
     initSpine();
     initPrinting();

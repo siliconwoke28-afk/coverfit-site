@@ -45,21 +45,23 @@
 <div class="wrap">
   <div class="hero">
     <div>
-      <div class="kicker">For KDP paperbacks</div>
-      <h1>KDP book cover maker</h1>
-      <p class="lede">Pick a trim size, type the page count, and CoverFit builds a full wrap with the right spine, bleed, and safe area. Export a 300 DPI PNG or a print-ready PDF, all in your browser.</p>
-      <p class="note">No upload. No account. Your cover image never leaves this device.</p>
+      <div class="kicker">A workbench for self-publishers</div>
+      <h1>Build a book cover that <em>fits</em> the book.</h1>
+      <p class="lede">CoverFit measures the wrap from your interior: trim, spine, bleed. Set the page count once, and the cover, the spine text, and the print file all follow.</p>
+      <div class="hero-cta">
+        <a class="btn accent" href="#cover-tool">Start a cover</a>
+        <a class="btn secondary" href="/kdp-cover-template">See the specs</a>
+      </div>
+      <p class="note">Runs entirely in this browser. No upload, no account.</p>
     </div>
-    <aside class="spec-card">
-      <h2>At a glance</h2>
-      <dl>
-        <dt>Spine formula</dt><dd>0.002252 in/page white</dd>
-        <dt></dt><dd>0.0025 in/page cream</dd>
-        <dt>Bleed</dt><dd>0.125 in each edge</dd>
-        <dt>Export</dt><dd>PNG 300 DPI · PDF</dd>
-        <dt>Page range</dt><dd>24 to 828</dd>
-      </dl>
-    </aside>
+    <div class="hero-proof">
+      <div class="label">Sample wraps</div>
+      <div class="proofs">
+        <div class="proof"><canvas id="proof-a" width="300" height="450" aria-label="Sample literary fiction cover"></canvas><div class="tagline">Literary fiction</div></div>
+        <div class="proof"><canvas id="proof-b" width="300" height="450" aria-label="Sample cookbook cover"></canvas><div class="tagline">Cookbook</div></div>
+        <div class="proof"><canvas id="proof-c" width="300" height="450" aria-label="Sample thriller cover"></canvas><div class="tagline">Thriller</div></div>
+      </div>
+    </div>
   </div>
 
   <div class="tool" id="cover-tool">
@@ -103,35 +105,29 @@
           <option value="white">White</option>
         </select>
       </div>
-      <div class="row2">
-        <div class="field">
-          <label for="f-bg">Background</label>
-          <input type="text" id="f-bg" value="#f6f1e6" inputmode="text">
+      <div class="field">
+        <label>Palette</label>
+        <div class="row3">
+          <div class="swatch"><input type="color" id="f-bg" value="#f4ecdd" aria-label="Background color"></div>
+          <div class="swatch"><input type="color" id="f-fg" value="#2b2118" aria-label="Text color"></div>
+          <div class="swatch"><input type="color" id="f-accent" value="#b4472a" aria-label="Accent color"></div>
         </div>
-        <div class="field">
-          <label for="f-fg">Text</label>
-          <input type="text" id="f-fg" value="#1e1a16" inputmode="text">
-        </div>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="f-accent">Accent</label>
-          <input type="text" id="f-accent" value="#b4472a" inputmode="text">
-        </div>
-        <div class="field">
-          <label for="f-font">Typeface</label>
-          <select id="f-font">
-            <option value="Georgia, serif" selected>Georgia</option>
-            <option value="&quot;Times New Roman&quot;, serif">Times</option>
-            <option value="&quot;Palatino Linotype&quot;, serif">Palatino</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-            <option value="&quot;Trebuchet MS&quot;, sans-serif">Trebuchet</option>
-          </select>
-        </div>
+        <div class="hint">Background, text, accent</div>
       </div>
       <div class="field">
-        <label for="f-image">Front cover image (optional)</label>
+        <label for="f-font">Typeface</label>
+        <select id="f-font">
+          <option value="Georgia, serif" selected>Georgia</option>
+          <option value="&quot;Times New Roman&quot;, serif">Times</option>
+          <option value="&quot;Palatino Linotype&quot;, serif">Palatino</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="&quot;Trebuchet MS&quot;, sans-serif">Trebuchet</option>
+        </select>
+      </div>
+      <div class="field file-field">
+        <span class="field-label" style="display:block;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">Front cover image (optional)</span>
         <input type="file" id="f-image" accept="image/*">
+        <label class="file-label" for="f-image"><span id="f-image-name">No image selected</span><b>Browse</b></label>
         <div class="hint">JPG, PNG, or WebP. Stays on your device.</div>
       </div>
       <div class="field">
@@ -140,13 +136,6 @@
       <div class="field">
         <label><input type="checkbox" id="f-guides"> Show bleed and safe-area guides</label>
       </div>
-      <div class="actions">
-        <button class="btn accent" type="button" id="btn-png">Download 300 DPI PNG</button>
-        <button class="btn" type="button" id="btn-pdf">Download print-ready PDF</button>
-      </div>
-      <div class="actions" style="grid-template-columns:1fr">
-        <button class="btn secondary" type="button" id="btn-reset">Reset to sample</button>
-      </div>
     </form>
 
     <div>
@@ -154,12 +143,18 @@
         <canvas id="cover-canvas" width="1200" height="850" aria-label="Live preview of the full book cover wrap"></canvas>
         <div class="cap">Full wrap preview · back cover, spine, front cover</div>
       </div>
-      <div class="readout">
+      <div class="readout" aria-live="polite">
         <div><span>Full width</span><b id="r-fullw">13.050 in</b></div>
         <div><span>Full height</span><b id="r-fullh">9.250 in</b></div>
         <div><span>Spine</span><b id="r-spine">0.800 in</b></div>
         <div><span>Pixels at 300 DPI</span><b id="r-px">3915 × 2775</b></div>
       </div>
+      <div class="actions">
+        <button class="btn accent" type="button" id="btn-png">Save PNG</button>
+        <button class="btn" type="button" id="btn-pdf">Save print PDF</button>
+      </div>
+      <div class="hint" style="margin-top:9px;text-align:center">PNG is 300 DPI. The PDF is the file to send to KDP's previewer.</div>
+      <button class="btn secondary block" type="button" id="btn-reset" style="margin-top:10px">Reset to sample</button>
     </div>
   </div>
 
