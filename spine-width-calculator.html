@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spine Width Calculator for KDP Paperbacks | CoverFit</title>
+<meta name="description" content="Calculate book spine width in inches, millimeters, and pixels from page count and paper stock. Includes the KDP per-page figures and a full-wrap size.">
+<link rel="canonical" href="https://coverfit.app/spine-width-calculator">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spine Width Calculator for KDP Paperbacks">
+<meta property="og:description" content="Page count × 0.0025 in for cream, 0.002252 in for white. Get inches, mm, pixels, and the full wrap.">
+<meta property="og:url" content="https://coverfit.app/spine-width-calculator">
+<meta name="theme-color" content="#faf6ef">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="/"><span class="mark" aria-hidden="true"></span>Cover<em>Fit</em></a>
+    <nav class="links" aria-label="Main">
+      <a href="/">Cover maker</a>
+      <a href="/kdp-cover-template">Cover template</a>
+      <a href="/spine-width-calculator" aria-current="page">Spine width</a>
+      <a href="/printing-cost-calculator">Printing cost</a>
+      <a href="/book-cover-design">Design guide</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="kicker">One number, three units</div>
+      <h1>Spine width calculator</h1>
+      <p class="lede">Spine width is page count multiplied by paper thickness. Enter the two numbers and get inches, millimeters, pixels at 300 DPI, and the full-wrap size that follows.</p>
+      <p class="note">KDP: 0.002252 in per page on white, 0.0025 in per page on cream.</p>
+    </div>
+    <aside class="spec-card">
+      <h2>Why it matters</h2>
+      <dl>
+        <dt>Too narrow</dt><dd>Art wraps onto the spine</dd>
+        <dt>Too wide</dt><dd>Spine text drifts to the front</dd>
+        <dt>Tolerance</dt><dd>About 0.0625 in</dd>
+        <dt>Recalculate</dt><dd>Every page-count change</dd>
+      </dl>
+    </aside>
+  </div>
+
+  <div class="tool" id="spine-tool">
+    <form class="panel" onsubmit="return false">
+      <h2>Spine inputs</h2>
+      <div class="field">
+        <label for="s-pages">Page count</label>
+        <input type="number" id="s-pages" value="320" min="24" max="828" step="2">
+        <div class="hint">Use the final interior page count, not the manuscript page count.</div>
+      </div>
+      <div class="field">
+        <label for="s-paper">Paper stock</label>
+        <select id="s-paper">
+          <option value="cream" selected>Cream</option>
+          <option value="white">White</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="s-trim">Trim size</label>
+        <select id="s-trim">
+          <option value="6x9" selected>6 × 9 in</option>
+          <option value="5.5x8.5">5.5 × 8.5 in</option>
+          <option value="5x8">5 × 8 in</option>
+          <option value="5.25x8">5.25 × 8 in</option>
+          <option value="7x10">7 × 10 in</option>
+          <option value="8.5x11">8.5 × 11 in</option>
+          <option value="8x10">8 × 10 in</option>
+        </select>
+      </div>
+      <a class="btn accent block" href="/">Build the full cover with this spine</a>
+    </form>
+
+    <div>
+      <div class="preview" style="min-height:auto;padding:26px">
+        <div style="text-align:center">
+          <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Spine width</div>
+          <div id="s-out" style="font-size:46px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums">0.800 in</div>
+          <div style="color:var(--muted);font-size:14px;margin-top:4px"><span id="s-mm">20.32 mm</span> · <span id="s-px">240 px @300dpi</span></div>
+        </div>
+      </div>
+      <div class="readout">
+        <div><span>Full width</span><b id="s-fullw">13.050 in</b></div>
+        <div><span>Full height</span><b id="s-fullh">9.250 in</b></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <h2>The formula</h2>
+    <p>Spine width = page count × paper thickness. KDP publishes two thickness figures for black-ink paperbacks: 0.002252 in per page for white and 0.0025 in per page for cream. Cream is thicker, so the same book is wider on cream.</p>
+    <p>Example: 320 pages × 0.0025 = <strong>0.800 in</strong>. The same book on white paper is 320 × 0.002252 = <strong>0.721 in</strong>, a difference of 0.079 in. That is more than the usual cutting tolerance, so do not reuse a cover between paper stocks.</p>
+
+    <h2>Spine width by page count</h2>
+    <table>
+      <thead><tr><th class="num">Pages</th><th class="num">White</th><th class="num">Cream</th><th class="num">Cream in mm</th></tr></thead>
+      <tbody>
+        <tr><td class="num">100</td><td class="num">0.225</td><td class="num">0.250</td><td class="num">6.35</td></tr>
+        <tr><td class="num">150</td><td class="num">0.338</td><td class="num">0.375</td><td class="num">9.53</td></tr>
+        <tr><td class="num">200</td><td class="num">0.450</td><td class="num">0.500</td><td class="num">12.70</td></tr>
+        <tr><td class="num">250</td><td class="num">0.563</td><td class="num">0.625</td><td class="num">15.88</td></tr>
+        <tr><td class="num">300</td><td class="num">0.676</td><td class="num">0.750</td><td class="num">19.05</td></tr>
+        <tr><td class="num">350</td><td class="num">0.788</td><td class="num">0.875</td><td class="num">22.23</td></tr>
+        <tr><td class="num">400</td><td class="num">0.901</td><td class="num">1.000</td><td class="num">25.40</td></tr>
+        <tr><td class="num">500</td><td class="num">1.126</td><td class="num">1.250</td><td class="num">31.75</td></tr>
+        <tr><td class="num">700</td><td class="num">1.576</td><td class="num">1.750</td><td class="num">44.45</td></tr>
+      </tbody>
+    </table>
+
+    <h2>When the spine is too narrow for text</h2>
+    <p>Below roughly 0.25 in there is no usable spine text. A 100-page cream book has a 0.250 in spine; after printing tolerance, a vertical title will look cramped or clip. Leave the spine blank and keep the color flat.</p>
+    <p>For spines between 0.25 and 0.5 in, reduce the type size and keep the label short: title only, no subtitle, no author. CoverFit hides spine text automatically below 0.18 in.</p>
+
+    <div class="cta">
+      <h2>Put the number to work</h2>
+      <p>The cover maker uses the same formula and draws the spine, back, and front on one wrap.</p>
+      <a class="btn accent" href="/">Open the cover maker</a>
+    </div>
+
+    <div class="related">
+      <a href="/kdp-cover-template"><b>KDP cover template</b><span>Bleed, trim, and safe-area rules</span></a>
+      <a href="/printing-cost-calculator"><b>Printing cost calculator</b><span>What the page count costs you</span></a>
+      <a href="/trim-sizes"><b>Trim sizes</b><span>Pick a size before the spine</span></a>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <div><strong>CoverFit</strong> · a browser-only cover studio for self-publishers.</div>
+      <div style="margin-top:6px">Contact: <a href="mailto:fit@coverfit.app">fit@coverfit.app</a></div>
+    </div>
+    <nav aria-label="Footer">
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/contact">Contact</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+  <div class="wrap" style="margin-top:14px">Not affiliated with Amazon or Kindle Direct Publishing. Verify every file in KDP's previewer before publishing.</div>
+</footer>
+<script src="/assets/cover.js" defer></script>
+</body>
+</html>

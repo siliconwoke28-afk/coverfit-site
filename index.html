@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KDP Book Cover Maker, Free and Print-Ready | CoverFit</title>
+<meta name="description" content="Design a KDP-compliant book cover in your browser. Choose a trim size, enter the page count, and export a 300 DPI PNG or print-ready PDF with the correct spine and bleed.">
+<link rel="canonical" href="https://coverfit.app/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KDP Book Cover Maker, Free and Print-Ready">
+<meta property="og:description" content="Correct spine width, bleed, and 300 DPI export for KDP paperbacks. No upload, no account.">
+<meta property="og:url" content="https://coverfit.app/">
+<meta property="og:site_name" content="CoverFit">
+<meta name="theme-color" content="#faf6ef">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"CoverFit","url":"https://coverfit.app/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Browser-based KDP book cover maker that exports 300 DPI PNG and print-ready PDF with correct spine width and bleed."}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What size should a KDP book cover be?","acceptedAnswer":{"@type":"Answer","text":"A full-wrap KDP cover is 2 × trim width + spine width + 0.25 in of bleed across, and trim height + 0.25 in tall. For a 6 × 9 in book with 320 cream pages, the spine is 0.800 in, so the full cover is 13.050 × 9.250 in."}},
+{"@type":"Question","name":"How is spine width calculated?","acceptedAnswer":{"@type":"Answer","text":"KDP uses 0.002252 in per page for white paper and 0.0025 in per page for cream paper. Multiply the page count by that figure. A 320-page cream book is 320 × 0.0025 = 0.800 in."}},
+{"@type":"Question","name":"Does CoverFit upload my files?","acceptedAnswer":{"@type":"Answer","text":"No. The cover is rendered in your browser with the canvas API. Images stay on your device, and exports are generated locally."}},
+{"@type":"Question","name":"Can I use the exported PDF for KDP?","acceptedAnswer":{"@type":"Answer","text":"The PDF is a single-page wrap at 300 DPI with the exact trim, spine, and bleed dimensions you entered. Check the file in KDP's previewer before you publish; CoverFit cannot verify fonts, color profiles, or KDP account-specific requirements."}}
+]}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="/"><span class="mark" aria-hidden="true"></span>Cover<em>Fit</em></a>
+    <nav class="links" aria-label="Main">
+      <a href="/" aria-current="page">Cover maker</a>
+      <a href="/kdp-cover-template">Cover template</a>
+      <a href="/spine-width-calculator">Spine width</a>
+      <a href="/printing-cost-calculator">Printing cost</a>
+      <a href="/book-cover-design">Design guide</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="kicker">For KDP paperbacks</div>
+      <h1>KDP book cover maker</h1>
+      <p class="lede">Pick a trim size, type the page count, and CoverFit builds a full wrap with the right spine, bleed, and safe area. Export a 300 DPI PNG or a print-ready PDF, all in your browser.</p>
+      <p class="note">No upload. No account. Your cover image never leaves this device.</p>
+    </div>
+    <aside class="spec-card">
+      <h2>At a glance</h2>
+      <dl>
+        <dt>Spine formula</dt><dd>0.002252 in/page white</dd>
+        <dt></dt><dd>0.0025 in/page cream</dd>
+        <dt>Bleed</dt><dd>0.125 in each edge</dd>
+        <dt>Export</dt><dd>PNG 300 DPI · PDF</dd>
+        <dt>Page range</dt><dd>24 to 828</dd>
+      </dl>
+    </aside>
+  </div>
+
+  <div class="tool" id="cover-tool">
+    <form class="panel" onsubmit="return false">
+      <h2>Cover setup</h2>
+      <div class="field">
+        <label for="f-title">Title</label>
+        <input type="text" id="f-title" value="The Quiet Cartographer" maxlength="90" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-subtitle">Subtitle or back-cover blurb</label>
+        <textarea id="f-subtitle" rows="3" maxlength="400">A novel about maps, memory, and the places we refuse to leave.</textarea>
+      </div>
+      <div class="field">
+        <label for="f-author">Author</label>
+        <input type="text" id="f-author" value="A. R. Whitfield" maxlength="60" autocomplete="off">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f-trim">Trim size</label>
+          <select id="f-trim">
+            <option value="6x9" selected>6 × 9 in</option>
+            <option value="5.5x8.5">5.5 × 8.5 in</option>
+            <option value="5x8">5 × 8 in</option>
+            <option value="5.25x8">5.25 × 8 in</option>
+            <option value="7x10">7 × 10 in</option>
+            <option value="8.5x11">8.5 × 11 in</option>
+            <option value="8x10">8 × 10 in</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-pages">Page count</label>
+          <input type="number" id="f-pages" value="320" min="24" max="828" step="2">
+          <div class="hint">24 to 828 pages.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-paper">Paper</label>
+        <select id="f-paper">
+          <option value="cream" selected>Cream</option>
+          <option value="white">White</option>
+        </select>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f-bg">Background</label>
+          <input type="text" id="f-bg" value="#f6f1e6" inputmode="text">
+        </div>
+        <div class="field">
+          <label for="f-fg">Text</label>
+          <input type="text" id="f-fg" value="#1e1a16" inputmode="text">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="f-accent">Accent</label>
+          <input type="text" id="f-accent" value="#b4472a" inputmode="text">
+        </div>
+        <div class="field">
+          <label for="f-font">Typeface</label>
+          <select id="f-font">
+            <option value="Georgia, serif" selected>Georgia</option>
+            <option value="&quot;Times New Roman&quot;, serif">Times</option>
+            <option value="&quot;Palatino Linotype&quot;, serif">Palatino</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="&quot;Trebuchet MS&quot;, sans-serif">Trebuchet</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-image">Front cover image (optional)</label>
+        <input type="file" id="f-image" accept="image/*">
+        <div class="hint">JPG, PNG, or WebP. Stays on your device.</div>
+      </div>
+      <div class="field">
+        <label><input type="checkbox" id="f-spine-text" checked> Print title on spine</label>
+      </div>
+      <div class="field">
+        <label><input type="checkbox" id="f-guides"> Show bleed and safe-area guides</label>
+      </div>
+      <div class="actions">
+        <button class="btn accent" type="button" id="btn-png">Download 300 DPI PNG</button>
+        <button class="btn" type="button" id="btn-pdf">Download print-ready PDF</button>
+      </div>
+      <div class="actions" style="grid-template-columns:1fr">
+        <button class="btn secondary" type="button" id="btn-reset">Reset to sample</button>
+      </div>
+    </form>
+
+    <div>
+      <div class="preview">
+        <canvas id="cover-canvas" width="1200" height="850" aria-label="Live preview of the full book cover wrap"></canvas>
+        <div class="cap">Full wrap preview · back cover, spine, front cover</div>
+      </div>
+      <div class="readout">
+        <div><span>Full width</span><b id="r-fullw">13.050 in</b></div>
+        <div><span>Full height</span><b id="r-fullh">9.250 in</b></div>
+        <div><span>Spine</span><b id="r-spine">0.800 in</b></div>
+        <div><span>Pixels at 300 DPI</span><b id="r-px">3915 × 2775</b></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <h2>What the export actually contains</h2>
+    <p>Most free cover tools give you a flat image. A paperback cover is a single wrap that includes the back cover, the spine, and the front cover on one sheet, with extra bleed on every edge. CoverFit computes that sheet from three numbers: trim size, page count, and paper stock.</p>
+    <table>
+      <thead><tr><th>Trim</th><th class="num">Pages</th><th>Paper</th><th class="num">Spine</th><th class="num">Full wrap</th></tr></thead>
+      <tbody>
+        <tr><td>6 × 9 in</td><td class="num">320</td><td>Cream</td><td class="num">0.800 in</td><td class="num">13.050 × 9.250 in</td></tr>
+        <tr><td>6 × 9 in</td><td class="num">320</td><td>White</td><td class="num">0.721 in</td><td class="num">12.971 × 9.250 in</td></tr>
+        <tr><td>5.5 × 8.5 in</td><td class="num">240</td><td>Cream</td><td class="num">0.600 in</td><td class="num">11.850 × 8.750 in</td></tr>
+        <tr><td>5 × 8 in</td><td class="num">180</td><td>White</td><td class="num">0.405 in</td><td class="num">10.655 × 8.250 in</td></tr>
+        <tr><td>8.5 × 11 in</td><td class="num">120</td><td>White</td><td class="num">0.270 in</td><td class="num">17.520 × 11.250 in</td></tr>
+      </tbody>
+    </table>
+    <p>If your page count changes, the spine changes, and the whole wrap changes with it. That is the step most DIY covers get wrong: the spine is not a design choice, it is a function of the interior.</p>
+
+    <h2>How to use it</h2>
+    <ol>
+      <li><strong>Set the interior first.</strong> Enter the same trim size and final page count you used for the manuscript. An odd page count matters less than being consistent with the file you upload to KDP.</li>
+      <li><strong>Design inside the safe area.</strong> Turn on guides. Keep text at least 0.25 in from the trim edge; anything in the bleed may be cut.</li>
+      <li><strong>Export both files.</strong> The PNG is for mockups and quick checks. The PDF is the one to send to KDP's previewer.</li>
+      <li><strong>Check barcode space.</strong> KDP places a barcode in the lower-right of the back cover, roughly 2 × 1.2 in. Keep that area quiet.</li>
+    </ol>
+
+    <h2>Common questions</h2>
+    <div class="faq">
+      <details>
+        <summary>What size should a KDP book cover be?</summary>
+        <p>Full width = 2 × trim width + spine + 0.25 in. Full height = trim height + 0.25 in. For a 6 × 9 in book with 320 cream pages, that is 13.050 × 9.250 in.</p>
+      </details>
+      <details>
+        <summary>How is spine width calculated?</summary>
+        <p>0.002252 in per page for white paper, 0.0025 in per page for cream. A 320-page cream book is 0.800 in. These are the figures KDP documents for black-and-white paperbacks; always confirm in the KDP previewer.</p>
+      </details>
+      <details>
+        <summary>Does CoverFit upload my files?</summary>
+        <p>No. Rendering and export happen in your browser. Nothing is sent to a server, and there is no account to create.</p>
+      </details>
+      <details>
+        <summary>Can I use the exported PDF for KDP?</summary>
+        <p>It is a single-page wrap at 300 DPI with the dimensions you entered. KDP still has to accept it in the previewer, and it cannot verify fonts, color, or account-specific requirements.</p>
+      </details>
+    </div>
+
+    <div class="related">
+      <a href="/kdp-cover-template"><b>KDP cover template</b><span>Dimensions and a downloadable guide</span></a>
+      <a href="/spine-width-calculator"><b>Spine width calculator</b><span>Inches, millimeters, and pixels</span></a>
+      <a href="/printing-cost-calculator"><b>Printing cost calculator</b><span>Estimate unit cost and royalty</span></a>
+      <a href="/book-cover-design"><b>Book cover design guide</b><span>What works at thumbnail size</span></a>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <div><strong>CoverFit</strong> · a browser-only cover studio for self-publishers.</div>
+      <div style="margin-top:6px">Contact: <a href="mailto:fit@coverfit.app">fit@coverfit.app</a></div>
+    </div>
+    <nav aria-label="Footer">
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/contact">Contact</a>
+      <a href="/sitemap.xml">Sitemap</a>
+    </nav>
+  </div>
+  <div class="wrap" style="margin-top:14px">Not affiliated with Amazon or Kindle Direct Publishing. Verify every file in KDP's previewer before publishing.</div>
+</footer>
+<script src="/assets/cover.js" defer></script>
+</body>
+</html>
