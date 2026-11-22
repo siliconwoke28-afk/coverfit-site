@@ -92,6 +92,24 @@
       px: $("r-px"), pngBtn: $("btn-png"), pdfBtn: $("btn-pdf"), resetBtn: $("btn-reset")
     };
     var uploaded = null;
+    var statusEl = document.getElementById("tool-status");
+    var statusTimer = null;
+
+    function setStatus(msg, isError) {
+      if (!statusEl) return;
+      statusEl.hidden = false;
+      statusEl.textContent = msg;
+      statusEl.classList.toggle("is-error", !!isError);
+      clearTimeout(statusTimer);
+      statusTimer = setTimeout(function () { statusEl.hidden = true; }, 8000);
+    }
+
+    function clearStatus() {
+      if (!statusEl) return;
+      clearTimeout(statusTimer);
+      statusEl.hidden = true;
+      statusEl.textContent = "";
+    }
 
     function current() {
       return {
@@ -258,10 +276,27 @@
       var f = this.files && this.files[0];
       var nm = document.getElementById("f-image-name");
       if (nm) nm.textContent = f ? f.name : "No image selected";
-      if (!f) { uploaded = null; render(); return; }
+      if (!f) { uploaded = null; clearStatus(); render(); return; }
+      if (!/^image\//.test(f.type)) {
+        this.value = ""; uploaded = null;
+        if (nm) nm.textContent = "No image selected";
+        setStatus("That file is not an image. Use a JPG, PNG, or WebP.", true);
+        render(); return;
+      }
+      if (f.size > 25 * 1024 * 1024) {
+        this.value = ""; uploaded = null;
+        if (nm) nm.textContent = "No image selected";
+        setStatus("Image is larger than 25 MB. Resize it first, then try again.", true);
+        render(); return;
+      }
       var url = URL.createObjectURL(f);
       var img = new Image();
-      img.onload = function () { uploaded = img; URL.revokeObjectURL(url); render(); };
+      img.onload = function () { uploaded = img; URL.revokeObjectURL(url); clearStatus(); render(); };
+      img.onerror = function () {
+        URL.revokeObjectURL(url); uploaded = null;
+        setStatus("The image could not be decoded. Try exporting it again as JPG or PNG.", true);
+        render();
+      };
       img.src = url;
     });
 
@@ -274,38 +309,92 @@
 
     els.pages.addEventListener("change", function () { this.dataset.warn = ""; });
 
+    els.pages.addEventListener("change", function () {
+      var raw = this.value.trim();
+      var v = parseInt(raw, 10);
+      if (raw === "" || isNaN(v) || v < 24 || v > 828) {
+        var fixed = isNaN(v) ? 320 : Math.min(828, Math.max(24, v));
+        this.value = fixed;
+        setStatus("KDP accepts 24 to 828 pages. Page count set to " + fixed + ".", true);
+      } else {
+        clearStatus();
+      }
+      render();
+    });
+
+    var samples = [[els.title, els.title.value], [els.subtitle, els.subtitle.value], [els.author, els.author.value]];
+    samples.forEach(function (pair) {
+      var el = pair[0], sample = pair[1];
+      el.addEventListener("focus", function () {
+        if (this.value === sample) this.select();
+      });
+    });
+
+    var textTimer = null;
+    function checkText() {
+      clearTimeout(textTimer);
+      textTimer = setTimeout(function () {
+        if (!els.title.value.trim()) setStatus('Title is empty, so the preview shows "Book Title" until you type one.');
+        else if (!els.author.value.trim()) setStatus('Author is empty, so the preview shows "Author Name" until you type one.');
+        else clearStatus();
+      }, 700);
+    }
+    els.title.addEventListener("input", checkText);
+    els.author.addEventListener("input", checkText);
+
     els.pngBtn && els.pngBtn.addEventListener("click", function () {
-      var st = current();
-      var d = dims(st.trim, st.pages, st.paper);
-      var out = document.createElement("canvas");
-      draw(out, st, 300, false);
-      out.toBlob(function (blob) {
-        var a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "coverfit-" + st.trim + "-300dpi.png";
-        a.click();
-        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
-      }, "image/png");
+      try {
+        var st = current();
+        var d = dims(st.trim, st.pages, st.paper);
+        if (Math.max(d.fullW, d.fullH) * 300 > 16000) {
+          setStatus("This trim is too large to export at 300 DPI in this browser. Choose a smaller trim.", true);
+          return;
+        }
+        var out = document.createElement("canvas");
+        draw(out, st, 300, false);
+        out.toBlob(function (blob) {
+          if (!blob) { setStatus("PNG export failed. Try a smaller trim or a different browser.", true); return; }
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "coverfit-" + st.trim + "-300dpi.png";
+          a.click();
+          setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+          setStatus("PNG saved at " + out.width + " x " + out.height + " pixels.");
+        }, "image/png");
+      } catch (err) {
+        setStatus("PNG export failed: " + (err && err.message ? err.message : "unknown error"), true);
+      }
     });
 
     els.pdfBtn && els.pdfBtn.addEventListener("click", function () {
       var st = current();
       var d = dims(st.trim, st.pages, st.paper);
+      if (Math.max(d.fullW, d.fullH) * 300 > 16000) {
+        setStatus("This trim is too large to export at 300 DPI in this browser. Choose a smaller trim.", true);
+        return;
+      }
       els.pdfBtn.disabled = true;
-      els.pdfBtn.textContent = "Building PDF…";
-      var out = document.createElement("canvas");
-      draw(out, st, 300, false);
-      var data = out.toDataURL("image/jpeg", 0.92).split(",")[1];
-      var bin = atob(data), bytes = new Uint8Array(bin.length);
-      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-      var blob = jpegPdf(bytes, out.width, out.height, d.fullW * 72, d.fullH * 72);
-      var a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "coverfit-" + st.trim + "-print-ready.pdf";
-      a.click();
-      setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
-      els.pdfBtn.disabled = false;
-      els.pdfBtn.textContent = "Save print PDF";
+      els.pdfBtn.textContent = "Building PDF";
+      try {
+        var out = document.createElement("canvas");
+        draw(out, st, 300, false);
+        var data = out.toDataURL("image/jpeg", 0.92).split(",")[1];
+        if (!data) throw new Error("the canvas could not be encoded");
+        var bin = atob(data), bytes = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        var blob = jpegPdf(bytes, out.width, out.height, d.fullW * 72, d.fullH * 72);
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "coverfit-" + st.trim + "-print-ready.pdf";
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+        setStatus("PDF saved. Check it in KDP's previewer before publishing.");
+      } catch (err) {
+        setStatus("PDF export failed: " + (err && err.message ? err.message : "unknown error"), true);
+      } finally {
+        els.pdfBtn.disabled = false;
+        els.pdfBtn.textContent = "Save print PDF";
+      }
     });
 
     els.resetBtn && els.resetBtn.addEventListener("click", function () {
@@ -315,7 +404,7 @@
       els.trim.value = "6x9"; els.pages.value = "320"; els.paper.value = "cream";
       els.bg.value = "#f4ecdd"; els.fg.value = "#2b2118"; els.accent.value = "#b4472a";
       els.font.value = "Georgia, serif"; els.spineText.checked = true; els.guides.checked = false;
-      uploaded = null; var nm = document.getElementById("f-image-name"); if (nm) nm.textContent = "No image selected"; render();
+      uploaded = null; var nm = document.getElementById("f-image-name"); if (nm) nm.textContent = "No image selected"; clearStatus(); render();
     });
 
     render();

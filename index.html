@@ -14,15 +14,15 @@
 <meta property="og:image" content="https://coverfit.app/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="KDP Book Cover Maker, Free and Print-Ready — CoverFit">
+<meta property="og:image:alt" content="KDP Book Cover Maker, Free and Print-Ready - CoverFit">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="KDP Book Cover Maker, Free and Print-Ready">
 <meta name="twitter:description" content="Correct spine width, bleed, and 300 DPI export for KDP paperbacks. No upload, no account.">
 <meta name="twitter:image" content="https://coverfit.app/assets/og.png">
 <meta property="og:site_name" content="CoverFit">
 <meta name="msvalidate.01" content="9D7433268A5D262A40C974D2AF315FCE">
-<meta name="theme-color" content="#faf6ef">
-<link rel="stylesheet" href="/assets/site.css?v=2">
+<meta name="theme-color" content="#e8dcc7">
+<link rel="stylesheet" href="/assets/site.css?v=3">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"CoverFit","url":"https://coverfit.app/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Browser-based KDP book cover maker that exports 300 DPI PNG and print-ready PDF with correct spine width and bleed."}
 </script>
@@ -67,7 +67,7 @@
     <div class="hero-proof">
       <div class="label">Sample wraps</div>
       <div class="proofs">
-        <div class="proof"><canvas id="proof-a" width="300" height="450" aria-label="Sample literary fiction cover"></canvas><div class="tagline">Literary fiction</div></div>
+        <div class="proof"><canvas id="proof-a" width="300" height="450" aria-label="Sample literary fiction cover"></canvas><div class="tagline">Fiction</div></div>
         <div class="proof"><canvas id="proof-b" width="300" height="450" aria-label="Sample cookbook cover"></canvas><div class="tagline">Cookbook</div></div>
         <div class="proof"><canvas id="proof-c" width="300" height="450" aria-label="Sample thriller cover"></canvas><div class="tagline">Thriller</div></div>
       </div>
@@ -159,6 +159,7 @@
         <div><span>Spine</span><b id="r-spine">0.800 in</b></div>
         <div><span>Pixels at 300 DPI</span><b id="r-px">3915 × 2775</b></div>
       </div>
+      <p class="alert" id="tool-status" role="status" aria-live="polite" hidden></p>
       <div class="actions">
         <button class="btn accent" type="button" id="btn-png">Save PNG</button>
         <button class="btn" type="button" id="btn-pdf">Save print PDF</button>
@@ -236,6 +237,6 @@
   </div>
   <div class="wrap" style="margin-top:14px">Not affiliated with Amazon or Kindle Direct Publishing. Verify every file in KDP's previewer before publishing.</div>
 </footer>
-<script src="/assets/cover.js?v=2" defer></script>
+<script src="/assets/cover.js?v=3" defer></script>
 </body>
 </html>
