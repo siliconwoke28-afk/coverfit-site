@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="CoverFit">
 <meta name="msvalidate.01" content="9D7433268A5D262A40C974D2AF315FCE">
 <meta name="theme-color" content="#e8dcc7">
-<link rel="stylesheet" href="/assets/site.css?v=3">
+<link rel="stylesheet" href="/assets/site.css?v=4">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"CoverFit","url":"https://coverfit.app/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Browser-based KDP book cover maker that exports 300 DPI PNG and print-ready PDF with correct spine width and bleed."}
 </script>
@@ -139,6 +139,15 @@
         <input type="file" id="f-image" accept="image/*">
         <label class="file-label" for="f-image"><span id="f-image-name">No image selected</span><b>Browse</b></label>
         <div class="hint">JPG, PNG, or WebP. Stays on your device.</div>
+        <div class="crop-controls" id="crop-controls" hidden>
+          <div class="cr">
+            <div><label for="f-crop-x">Left / right</label><input type="range" id="f-crop-x" min="0" max="1" step="0.01" value="0.5"></div>
+            <div><label for="f-crop-y">Up / down</label><input type="range" id="f-crop-y" min="0" max="1" step="0.01" value="0.5"></div>
+            <div><label for="f-crop-z">Zoom</label><input type="range" id="f-crop-z" min="1" max="3" step="0.05" value="1"></div>
+          </div>
+          <button class="btn secondary" type="button" id="crop-reset">Center image</button>
+          <div class="hint">Or drag the front cover in the preview. Double-click it to recenter.</div>
+        </div>
       </div>
       <div class="field">
         <label><input type="checkbox" id="f-spine-text" checked> Print title on spine</label>
@@ -164,7 +173,7 @@
         <button class="btn accent" type="button" id="btn-png">Save PNG</button>
         <button class="btn" type="button" id="btn-pdf">Save print PDF</button>
       </div>
-      <div class="hint" style="margin-top:9px;text-align:center">PNG is 300 DPI. The PDF is the file to send to KDP's previewer.</div>
+      <div class="hint" style="margin-top:9px;text-align:center">PNG at 300 DPI.<br>PDF for KDP's previewer.</div>
       <button class="btn secondary block" type="button" id="btn-reset" style="margin-top:10px">Reset to sample</button>
     </div>
   </div>
@@ -237,6 +246,6 @@
   </div>
   <div class="wrap" style="margin-top:14px">Not affiliated with Amazon or Kindle Direct Publishing. Verify every file in KDP's previewer before publishing.</div>
 </footer>
-<script src="/assets/cover.js?v=3" defer></script>
+<script src="/assets/cover.js?v=4" defer></script>
 </body>
 </html>

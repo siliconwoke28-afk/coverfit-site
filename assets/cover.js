@@ -92,6 +92,7 @@
       px: $("r-px"), pngBtn: $("btn-png"), pdfBtn: $("btn-pdf"), resetBtn: $("btn-reset")
     };
     var uploaded = null;
+    var crop = { x: 0.5, y: 0.5, z: 1 };
     var statusEl = document.getElementById("tool-status");
     var statusTimer = null;
 
@@ -139,11 +140,14 @@
       // front panel artwork
       var frontX = xFront, frontY = BLEED, frontW = d.trimW, frontH = d.trimH;
       if (uploaded) {
-        var ia = uploaded.width / uploaded.height, ra = frontW / frontH;
-        var sw = uploaded.width, sh = uploaded.height, sx = 0, sy = 0;
-        if (ia > ra) { sw = uploaded.height * ra; sx = (uploaded.width - sw) / 2; }
-        else { sh = uploaded.width / ra; sy = (uploaded.height - sh) / 2; }
-        g.drawImage(uploaded, sx, sy, sw, sh, frontX, frontY, frontW, frontH);
+        g.save();
+        g.beginPath(); g.rect(frontX, frontY, frontW, frontH); g.clip();
+        var base = Math.max(frontW / uploaded.width, frontH / uploaded.height) * crop.z;
+        var dw = uploaded.width * base, dh = uploaded.height * base;
+        var dx = frontX - (dw - frontW) * crop.x;
+        var dy = frontY - (dh - frontH) * crop.y;
+        g.drawImage(uploaded, dx, dy, dw, dh);
+        g.restore();
         g.fillStyle = "rgba(0,0,0,.28)";
         g.fillRect(frontX, frontY, frontW, frontH);
       } else {
@@ -276,7 +280,7 @@
       var f = this.files && this.files[0];
       var nm = document.getElementById("f-image-name");
       if (nm) nm.textContent = f ? f.name : "No image selected";
-      if (!f) { uploaded = null; clearStatus(); render(); return; }
+      if (!f) { uploaded = null; toggleCrop(false); clearStatus(); render(); return; }
       if (!/^image\//.test(f.type)) {
         this.value = ""; uploaded = null;
         if (nm) nm.textContent = "No image selected";
@@ -291,7 +295,7 @@
       }
       var url = URL.createObjectURL(f);
       var img = new Image();
-      img.onload = function () { uploaded = img; URL.revokeObjectURL(url); clearStatus(); render(); };
+      img.onload = function () { uploaded = img; URL.revokeObjectURL(url); toggleCrop(true); clearStatus(); render(); };
       img.onerror = function () {
         URL.revokeObjectURL(url); uploaded = null;
         setStatus("The image could not be decoded. Try exporting it again as JPG or PNG.", true);
@@ -306,6 +310,68 @@
       el.addEventListener("input", render);
       el.addEventListener("change", render);
     });
+
+    function toggleCrop(show) {
+      var box = document.getElementById("crop-controls");
+      if (box) box.hidden = !show;
+    }
+
+    var cx = document.getElementById("f-crop-x"), cy = document.getElementById("f-crop-y"), cz = document.getElementById("f-crop-z");
+    if (cx) cx.addEventListener("input", function () { crop.x = parseFloat(this.value); render(); });
+    if (cy) cy.addEventListener("input", function () { crop.y = parseFloat(this.value); render(); });
+    if (cz) cz.addEventListener("input", function () { crop.z = parseFloat(this.value); render(); });
+    var cropReset = document.getElementById("crop-reset");
+    if (cropReset) cropReset.addEventListener("click", function () {
+      crop = { x: 0.5, y: 0.5, z: 1 };
+      if (cx) cx.value = 0.5; if (cy) cy.value = 0.5; if (cz) cz.value = 1;
+      render();
+    });
+
+    (function initDrag() {
+      if (!canvas || !canvas.addEventListener) return;
+      var dragging = false, lastX = 0, lastY = 0;
+      function pos(e) {
+        var r = canvas.getBoundingClientRect();
+        var sx = canvas.width / r.width, sy = canvas.height / r.height;
+        return { x: (e.clientX - r.left) * sx / 96, y: (e.clientY - r.top) * sy / 96, r: r };
+      }
+      canvas.addEventListener("pointerdown", function (e) {
+        if (!uploaded) return;
+        var st = current(), d = dims(st.trim, st.pages, st.paper), p = pos(e);
+        var fx = 0.125 + d.trimW + d.spine;
+        if (p.x < fx || p.x > fx + d.trimW || p.y < 0.125 || p.y > 0.125 + d.trimH) return;
+        dragging = true; lastX = e.clientX; lastY = e.clientY;
+        canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId);
+        canvas.classList.add("dragging");
+        e.preventDefault();
+      });
+      canvas.addEventListener("pointermove", function (e) {
+        if (!dragging || !uploaded) return;
+        var st = current(), d = dims(st.trim, st.pages, st.paper);
+        var base = Math.max(d.trimW / uploaded.width, d.trimH / uploaded.height) * crop.z;
+        var slackX = uploaded.width * base - d.trimW;
+        var slackY = uploaded.height * base - d.trimH;
+        var dx = (e.clientX - lastX) * (canvas.width / canvas.getBoundingClientRect().width) / 96;
+        var dy = (e.clientY - lastY) * (canvas.height / canvas.getBoundingClientRect().height) / 96;
+        if (slackX > 0.001) crop.x = Math.min(1, Math.max(0, crop.x - dx / slackX));
+        if (slackY > 0.001) crop.y = Math.min(1, Math.max(0, crop.y - dy / slackY));
+        lastX = e.clientX; lastY = e.clientY;
+        if (cx) cx.value = crop.x.toFixed(2);
+        if (cy) cy.value = crop.y.toFixed(2);
+        render();
+      });
+      function stop() {
+        dragging = false; canvas.classList.remove("dragging");
+      }
+      canvas.addEventListener("pointerup", stop);
+      canvas.addEventListener("pointercancel", stop);
+      canvas.addEventListener("dblclick", function () {
+        if (!uploaded) return;
+        crop = { x: 0.5, y: 0.5, z: 1 };
+        if (cx) cx.value = 0.5; if (cy) cy.value = 0.5; if (cz) cz.value = 1;
+        render();
+      });
+    })();
 
     els.pages.addEventListener("change", function () { this.dataset.warn = ""; });
 
@@ -404,7 +470,10 @@
       els.trim.value = "6x9"; els.pages.value = "320"; els.paper.value = "cream";
       els.bg.value = "#f4ecdd"; els.fg.value = "#2b2118"; els.accent.value = "#b4472a";
       els.font.value = "Georgia, serif"; els.spineText.checked = true; els.guides.checked = false;
-      uploaded = null; var nm = document.getElementById("f-image-name"); if (nm) nm.textContent = "No image selected"; clearStatus(); render();
+      uploaded = null; crop = { x: 0.5, y: 0.5, z: 1 }; toggleCrop(false);
+      var cx = document.getElementById("f-crop-x"), cy = document.getElementById("f-crop-y"), cz = document.getElementById("f-crop-z");
+      if (cx) cx.value = 0.5; if (cy) cy.value = 0.5; if (cz) cz.value = 1;
+      var nm = document.getElementById("f-image-name"); if (nm) nm.textContent = "No image selected"; clearStatus(); render();
     });
 
     render();
