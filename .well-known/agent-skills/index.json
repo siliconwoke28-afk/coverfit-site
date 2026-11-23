@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "skills": [
+    {
+      "name": "coverfit-cover-geometry",
+      "description": "Compute KDP paperback spine width, full-wrap dimensions, bleed, safe area and 300 DPI pixel sizes from trim size, page count and paper stock.",
+      "url": "https://coverfit.app/skills/coverfit-specs.md",
+      "digest": "sha256:e6fc636faca78cfd306407ccdba0c7c33a5d4b0a74f9627136ebff803cc0073b",
+      "mediaType": "text/markdown"
+    }
+  ]
+}

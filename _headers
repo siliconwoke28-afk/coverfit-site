@@ -40,3 +40,6 @@
 
 /.well-known/*
   Content-Type: application/json; charset=utf-8
+
+/skills/*
+  Content-Type: text/markdown; charset=utf-8

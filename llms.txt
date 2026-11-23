@@ -22,4 +22,5 @@
 - Markdown twins: append `.md` to any page path, for example https://coverfit.app/index.md
 - Full text: https://coverfit.app/llms-full.txt
 - AI catalog: https://coverfit.app/.well-known/ai-catalog
+- Agent skills: https://coverfit.app/.well-known/agent-skills/index.json
 - Sitemap: https://coverfit.app/sitemap.xml

@@ -8,6 +8,7 @@ CoverFit is a static, browser-only cover tool. There are no accounts, API keys, 
 - Markdown twins: append `.md` to a page path, for example https://coverfit.app/kdp-cover-template.md
 - AI summary: https://coverfit.app/llms.txt
 - Full AI summary: https://coverfit.app/llms-full.txt
+- Agent skills: https://coverfit.app/.well-known/agent-skills/index.json
 - Sitemap: https://coverfit.app/sitemap.xml
 
 ## Agent guidance
