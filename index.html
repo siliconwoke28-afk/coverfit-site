@@ -22,7 +22,16 @@
 <meta property="og:site_name" content="CoverFit">
 <meta name="msvalidate.01" content="9D7433268A5D262A40C974D2AF315FCE">
 <meta name="theme-color" content="#e8dcc7">
-<link rel="stylesheet" href="/assets/site.css?v=5">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1QJ4BB7VF"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-Z1QJ4BB7VF', { anonymize_ip: true });
+window.track = function (name, params) { try { gtag('event', name, params || {}); } catch (e) {} };
+</script>
+<link rel="stylesheet" href="/assets/site.css?v=6">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"CoverFit","url":"https://coverfit.app/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Browser-based KDP book cover maker that exports 300 DPI PNG and print-ready PDF with correct spine width and bleed."}
 </script>
@@ -34,7 +43,7 @@
 {"@type":"Question","name":"Can I use the exported PDF for KDP?","acceptedAnswer":{"@type":"Answer","text":"The PDF is a single-page wrap at 300 DPI with the exact trim, spine, and bleed dimensions you entered. Check the file in KDP's previewer before you publish; CoverFit cannot verify fonts, color profiles, or KDP account-specific requirements."}}
 ]}
 </script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://coverfit.app/#organization","name":"CoverFit","url":"https://coverfit.app/","logo":{"@type":"ImageObject","url":"https://coverfit.app/assets/og.png","width":1200,"height":630},"email":"fit@coverfit.app","sameAs":["https://github.com/siliconwoke28-afk/coverfit-site"]},{"@type":"WebSite","@id":"https://coverfit.app/#website","url":"https://coverfit.app/","name":"CoverFit","publisher":{"@id":"https://coverfit.app/#organization"}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://coverfit.app/#organization","name":"CoverFit","url":"https://coverfit.app/","logo":{"@type":"ImageObject","url":"https://coverfit.app/assets/og.png","width":1200,"height":630},"email":"fit@coverfit.app"},{"@type":"WebSite","@id":"https://coverfit.app/#website","url":"https://coverfit.app/","name":"CoverFit","publisher":{"@id":"https://coverfit.app/#organization"}}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -250,6 +259,6 @@
   </div>
   <div class="wrap" style="margin-top:14px">Not affiliated with Amazon or Kindle Direct Publishing. Verify every file in KDP's previewer before publishing.</div>
 </footer>
-<script src="/assets/cover.js?v=5" defer></script>
+<script src="/assets/cover.js?v=6" defer></script>
 </body>
 </html>

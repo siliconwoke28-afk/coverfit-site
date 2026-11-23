@@ -95,6 +95,7 @@
     var crop = { x: 0.5, y: 0.5, z: 1 };
     var statusEl = document.getElementById("tool-status");
     var statusTimer = null;
+    var warnedFlags = {};
 
     function setStatus(msg, isError) {
       if (!statusEl) return;
@@ -112,6 +113,12 @@
       statusEl.textContent = "";
     }
 
+
+    function warnOnce(key, params) {
+      if (warnedFlags[key]) return;
+      warnedFlags[key] = true;
+      if (window.track) window.track("cover_preflight_warning", Object.assign({ check: key }, params || {}));
+    }
 
     function hexLum(hex) {
       var h = (hex || "#000000").replace("#", "");
@@ -138,20 +145,21 @@
       probe.font = "700 " + size + "px " + st.font;
       var lines = wrapText(probe, st.title, d.trimW * 0.84, 3);
       var truncated = lines.length > 0 && /…$/.test(lines[lines.length - 1]);
-      if (truncated) rows.push({ cls: "bad", txt: "Title is truncated on the front cover.", fix: "edit-title", label: "Edit" });
+      if (truncated) { warnOnce("title_fit"); rows.push({ cls: "bad", txt: "Title is truncated on the front cover.", fix: "edit-title", label: "Edit" }); }
       else rows.push({ cls: "ok", txt: "Title fits the front cover." });
 
       var c = contrastRatio(st.fg, st.bg);
-      if (c < 4.5) rows.push({ cls: "warn", txt: "Text contrast is " + c.toFixed(1) + ":1. Aim for 4.5:1.", fix: "fix-contrast", label: "Fix" });
+      if (c < 4.5) { warnOnce("contrast", { ratio: +c.toFixed(1) }); rows.push({ cls: "warn", txt: "Text contrast is " + c.toFixed(1) + ":1. Aim for 4.5:1.", fix: "fix-contrast", label: "Fix" }); }
       else rows.push({ cls: "ok", txt: "Text contrast is " + c.toFixed(1) + ":1." });
 
       var ac = contrastRatio(st.accent, st.bg);
-      if (ac < 3) rows.push({ cls: "warn", txt: "Author line contrast is " + ac.toFixed(1) + ":1.", fix: "fix-author", label: "Fix" });
+      if (ac < 3) { warnOnce("author_contrast", { ratio: +ac.toFixed(1) }); rows.push({ cls: "warn", txt: "Author line contrast is " + ac.toFixed(1) + ":1.", fix: "fix-author", label: "Fix" }); }
 
       if (uploaded) {
         var base = Math.max(d.trimW / uploaded.width, d.trimH / uploaded.height) * crop.z;
         var dpi = 1 / base;
         if (dpi < 300) {
+          warnOnce("image_dpi", { dpi: Math.round(dpi) });
           rows.push({
             cls: "warn",
             txt: "Image resolves to about " + Math.round(dpi) + " DPI. Use at least " +
@@ -165,7 +173,7 @@
       }
 
       if (st.spineText) {
-        if (d.spine < 0.25) rows.push({ cls: "warn", txt: "Spine is " + fmt(d.spine, 3) + " in; spine text will be cramped.", fix: "spine-off", label: "Turn off" });
+        if (d.spine < 0.25) { warnOnce("spine_text", { spine: fmt(d.spine, 3) }); rows.push({ cls: "warn", txt: "Spine is " + fmt(d.spine, 3) + " in; spine text will be cramped.", fix: "spine-off", label: "Turn off" }); }
         else rows.push({ cls: "ok", txt: "Spine text fits a " + fmt(d.spine, 3) + " in spine." });
       }
 
@@ -346,12 +354,14 @@
       if (nm) nm.textContent = f ? f.name : "No image selected";
       if (!f) { uploaded = null; toggleCrop(false); clearStatus(); render(); return; }
       if (!/^image\//.test(f.type)) {
+        if (window.track) window.track("cover_upload_error", { reason: "type" });
         this.value = ""; uploaded = null;
         if (nm) nm.textContent = "No image selected";
         setStatus("That file is not an image. Use a JPG, PNG, or WebP.", true);
         render(); return;
       }
       if (f.size > 25 * 1024 * 1024) {
+        if (window.track) window.track("cover_upload_error", { reason: "size" });
         this.value = ""; uploaded = null;
         if (nm) nm.textContent = "No image selected";
         setStatus("Image is larger than 25 MB. Resize it first, then try again.", true);
@@ -359,9 +369,13 @@
       }
       var url = URL.createObjectURL(f);
       var img = new Image();
-      img.onload = function () { uploaded = img; URL.revokeObjectURL(url); toggleCrop(true); clearStatus(); render(); };
+      img.onload = function () {
+        uploaded = img; URL.revokeObjectURL(url); toggleCrop(true); clearStatus(); render();
+        if (window.track) window.track("cover_image_upload", { w: img.width, h: img.height, kb: Math.round(f.size / 1024) });
+      };
       img.onerror = function () {
         URL.revokeObjectURL(url); uploaded = null;
+        if (window.track) window.track("cover_upload_error", { reason: "decode" });
         setStatus("The image could not be decoded. Try exporting it again as JPG or PNG.", true);
         render();
       };
@@ -509,6 +523,7 @@
           a.click();
           setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
           setStatus("PNG saved at " + out.width + " x " + out.height + " pixels.");
+          if (window.track) window.track("cover_png_export", { trim: st.trim, pages: st.pages, w: out.width, h: out.height });
         }, "image/png");
       } catch (err) {
         setStatus("PNG export failed: " + (err && err.message ? err.message : "unknown error"), true);
@@ -538,6 +553,7 @@
         a.click();
         setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
         setStatus("PDF saved. Check it in KDP's previewer before publishing.");
+        if (window.track) window.track("cover_pdf_export", { trim: st.trim, pages: st.pages });
       } catch (err) {
         setStatus("PDF export failed: " + (err && err.message ? err.message : "unknown error"), true);
       } finally {

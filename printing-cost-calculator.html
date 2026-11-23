@@ -21,7 +21,16 @@
 <meta name="twitter:description" content="Enter pages, ink, and list price to see printing cost and the 60% royalty that follows.">
 <meta name="twitter:image" content="https://coverfit.app/assets/og.png">
 <meta name="theme-color" content="#e8dcc7">
-<link rel="stylesheet" href="/assets/site.css?v=5">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1QJ4BB7VF"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-Z1QJ4BB7VF', { anonymize_ip: true });
+window.track = function (name, params) { try { gtag('event', name, params || {}); } catch (e) {} };
+</script>
+<link rel="stylesheet" href="/assets/site.css?v=6">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Cover maker","item":"https://coverfit.app/"},{"@type":"ListItem","position":2,"name":"Printing cost calculator","item":"https://coverfit.app/printing-cost-calculator"}]}</script>
 </head>
 <body>
@@ -163,6 +172,6 @@
   </div>
   <div class="wrap" style="margin-top:14px">Not affiliated with Amazon or Kindle Direct Publishing. Verify every file in KDP's previewer before publishing.</div>
 </footer>
-<script src="/assets/cover.js?v=5" defer></script>
+<script src="/assets/cover.js?v=6" defer></script>
 </body>
 </html>

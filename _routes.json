@@ -20,7 +20,6 @@
     "/robots.txt",
     "/404.html",
     "/auth.md",
-    "/.well-known/*",
-    "/skills/*"
+    "/.well-known/*"
   ]
 }
