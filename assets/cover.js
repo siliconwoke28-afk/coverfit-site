@@ -112,6 +112,69 @@
       statusEl.textContent = "";
     }
 
+
+    function hexLum(hex) {
+      var h = (hex || "#000000").replace("#", "");
+      if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+      var v = [0, 2, 4].map(function (i) {
+        var c = parseInt(h.slice(i, i + 2), 16) / 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+    }
+
+    function contrastRatio(a, b) {
+      var l1 = hexLum(a), l2 = hexLum(b);
+      var hi = Math.max(l1, l2), lo = Math.min(l1, l2);
+      return (hi + 0.05) / (lo + 0.05);
+    }
+
+    function runPreflight(st, d) {
+      var list = document.getElementById("preflight-list");
+      if (!list) return;
+      var rows = [];
+      var probe = document.createElement("canvas").getContext("2d");
+      var size = fitFont(probe, st.title, st.font, d.trimW * 0.84, d.trimH * 0.16, d.trimH * 0.085);
+      probe.font = "700 " + size + "px " + st.font;
+      var lines = wrapText(probe, st.title, d.trimW * 0.84, 3);
+      var truncated = lines.length > 0 && /…$/.test(lines[lines.length - 1]);
+      if (truncated) rows.push({ cls: "bad", txt: "Title is truncated on the front cover.", fix: "edit-title", label: "Edit" });
+      else rows.push({ cls: "ok", txt: "Title fits the front cover." });
+
+      var c = contrastRatio(st.fg, st.bg);
+      if (c < 4.5) rows.push({ cls: "warn", txt: "Text contrast is " + c.toFixed(1) + ":1. Aim for 4.5:1.", fix: "fix-contrast", label: "Fix" });
+      else rows.push({ cls: "ok", txt: "Text contrast is " + c.toFixed(1) + ":1." });
+
+      var ac = contrastRatio(st.accent, st.bg);
+      if (ac < 3) rows.push({ cls: "warn", txt: "Author line contrast is " + ac.toFixed(1) + ":1.", fix: "fix-author", label: "Fix" });
+
+      if (uploaded) {
+        var base = Math.max(d.trimW / uploaded.width, d.trimH / uploaded.height) * crop.z;
+        var dpi = 1 / base;
+        if (dpi < 300) {
+          rows.push({
+            cls: "warn",
+            txt: "Image resolves to about " + Math.round(dpi) + " DPI. Use at least " +
+              Math.ceil(d.trimW * 300) + " × " + Math.ceil(d.trimH * 300) + " px.",
+            fix: crop.z > 1 ? "reset-crop" : null,
+            label: "Fit image"
+          });
+        } else {
+          rows.push({ cls: "ok", txt: "Image resolves to " + Math.round(dpi) + " DPI at this crop." });
+        }
+      }
+
+      if (st.spineText) {
+        if (d.spine < 0.25) rows.push({ cls: "warn", txt: "Spine is " + fmt(d.spine, 3) + " in; spine text will be cramped.", fix: "spine-off", label: "Turn off" });
+        else rows.push({ cls: "ok", txt: "Spine text fits a " + fmt(d.spine, 3) + " in spine." });
+      }
+
+      list.innerHTML = rows.map(function (r) {
+        return '<li><span class="dot ' + r.cls + '"></span><span class="txt">' + r.txt + '</span>' +
+          (r.fix ? '<button type="button" data-fix="' + r.fix + '">' + r.label + '</button>' : '') + '</li>';
+      }).join("");
+    }
+
     function current() {
       return {
         trim: els.trim.value, pages: Math.max(24, Math.min(828, parseInt(els.pages.value, 10) || 0)),
@@ -274,6 +337,7 @@
         els.pages.parentElement.querySelector(".hint").textContent = "KDP accepts 24 to 828 pages for paperback interiors.";
         els.pages.dataset.warn = "1";
       }
+      runPreflight(st, d);
     }
 
     els.image && els.image.addEventListener("change", function () {
@@ -372,6 +436,25 @@
         render();
       });
     })();
+
+    var pfList = document.getElementById("preflight-list");
+    if (pfList) pfList.addEventListener("click", function (e) {
+      var btn = e.target.closest("button[data-fix]");
+      if (!btn) return;
+      var fix = btn.getAttribute("data-fix");
+      if (fix === "edit-title") { els.title.focus(); els.title.select(); return; }
+      if (fix === "fix-contrast") {
+        els.fg.value = hexLum(els.bg.value) > 0.4 ? "#2b2118" : "#f4ecdd";
+      } else if (fix === "fix-author") {
+        els.accent.value = els.fg.value;
+      } else if (fix === "reset-crop") {
+        crop = { x: 0.5, y: 0.5, z: 1 };
+        if (cx) cx.value = 0.5; if (cy) cy.value = 0.5; if (cz) cz.value = 1;
+      } else if (fix === "spine-off") {
+        els.spineText.checked = false;
+      }
+      render();
+    });
 
     els.pages.addEventListener("change", function () { this.dataset.warn = ""; });
 
